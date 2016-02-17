@@ -48,9 +48,9 @@ create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt=
   train_dat <- vector("list", length= n)
   p_ind <- which(get(dep_var, envir= as.environment(train_temp)) == level)
   for (i in 1:n) {
-    n_ind <- which(get(dep_var, envir= as.environment(df)) != level)
+    n_ind <- which(get(dep_var, envir= as.environment(train_temp)) != level)
     n_ind <- sample(n_ind, size= floor(length(p_ind) * major_class_wt), replace= TRUE)
-    train_dat[[i]] <- df[c(p_ind, n_ind),]
+    train_dat[[i]] <- train_temp[c(p_ind, n_ind),]
   }
   
   return(list(test=test_dat, train=train_dat))

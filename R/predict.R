@@ -27,13 +27,13 @@ predict.glmEnsemble <- function(object, newdata= NULL,
   if (type == "link") {
     return(lp)
   } else {
-    if (all.equal(object[[2]]$family, binomial(link= "logit"))) {
+    if (family$family == "binomial" & family$link == "logit") {
       pred <- exp(lp) / (1 + exp(lp))
-    } else if (all.equal(object[[2]]$family, binomial(link= "probit"))) {
+    } else if (family$family == "binomial" & family$link == "probit") {
       pred <- pnorm(lp)
-    } else if (all.equal(object[[2]]$family, poisson(link= "log"))) {
+    } else if (family$family == "poisson" & family$link == "log") {
       pred <- round(exp(lp),0)
-    } else if (all.equal(object[[2]]$family, gaussian(link= "identity"))) {
+    } else if (family$family == "gaussian" & family$link == "identity") {
       pred <- lp
     }
     

@@ -8,7 +8,7 @@
 # @param family Used to specify the details of the glm methods. See \code{\link{[stats]family}}
 train_test_glm <- function(tr_dat, test_dat, out_vec, direction, family= binomial(link="logit")) {
   
-  temp_logit <- step(glm(dep_var ~., data= tr_dat, family= binomial(link="logit")),
+  temp_logit <- step(glm(dep_var ~., data= tr_dat, family= family),
                      trace= 0, direction= direction)
   # save coef
   ind_m <- unlist(sapply(names(coef(temp_logit)), function(i) {
@@ -17,7 +17,7 @@ train_test_glm <- function(tr_dat, test_dat, out_vec, direction, family= binomia
   
   # calc accuracy / weight
   p <- predict(temp_logit, newdata= test_dat, type= "response")
-  if (all.equal(family, binomial(link="logit"))) {
+  if (family$family == "binomial" & family$link %in% c("logit", "probit")) {
     w <- class_logloss(p, ifelse(test_dat$dep_var == 1, 1, 0))
   } else if (class(family) == "family") {
     w <- rmse(obs= test_dat$dep_var, pred= p)

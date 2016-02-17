@@ -1,6 +1,6 @@
 Package: glmEnsemble
 Title: Builds GLM ensemble models in parallel
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: person("Alex", "Whitworth", email = "whitworth.alex@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends:
