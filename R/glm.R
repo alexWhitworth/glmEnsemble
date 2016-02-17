@@ -93,6 +93,7 @@ glm_ensemble <- function(df, dep_var, cols= which(names(df) != dep_var), n= 100L
                          direction= "backward", 
                          family= binomial(link= "logit"),
                          leave_cores= NULL) {
+  
   if (test_pct <= 0 | test_pct >= 1) stop("test_pct must be in (0,1).")
   if (!is.numeric(cols) | length(cols) >= ncol(df)) 
     stop("cols must be a numeric vector with length < ncol(df).")
@@ -105,7 +106,8 @@ glm_ensemble <- function(df, dep_var, cols= which(names(df) != dep_var), n= 100L
   # 01. Create data partitions
   dat <- create_partitions(df= df, dep_var= "dep_var", n=n, 
                            level= level, major_class_wt = major_class_wt,
-                           seed= seed, test_pct= test_pct)
+                           seed= seed, test_pct= test_pct,
+                           gaussian= ifelse(family$family == "gaussian", TRUE, FALSE))
   
   # build coef backbone
   glm_def <- glm(dep_var ~ ., data= dat$train[[1]], family= family)

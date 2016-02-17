@@ -14,9 +14,11 @@
 #' @param seed An integer. Seed for reproducibility. Defaults to \code{379L}.
 #' @param test_pct A number in (0,1) specifying the size of the test dataset as a percentage.
 #' Defaults to \code{0.33}
+#' @param gaussian Logical. Does the response variable follow a Gaussian distribution? Defaults 
+#' to \code{FALSE}.
 #' @export
 create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt= 1,
-                              seed= 379L, test_pct= 0.33) {
+                              seed= 379L, test_pct= 0.33, gaussian= FALSE) {
   # error checking
   if (!is.data.frame(df)) stop("df must be a data.frame. Coercion is intentionally not supported.")
   if (!is.character(dep_var)) stop("dep_var must be a character.")
@@ -25,32 +27,43 @@ create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt=
   if (!is.numeric(test_pct) | test_pct <= 0 | test_pct >= 1) 
     stop("test_pct must be a number in (0,1).")
   
-  
-  if (missing(level) | is.null(level)) {
-    if (is.factor(get(dep_var, envir= as.environment(df)))) {
-      level <- levels(get(dep_var, envir= as.environment(df)))[2]
-    } else {
-      conv <- get(paste("as", typeof(get(dep_var, envir= as.environment(df))), sep= "."))
-      level <- names(table(get(dep_var, envir= as.environment(df))))[2]
-      level <- conv(level)
+  if (!gaussian) {
+    if (missing(level) | is.null(level)) {
+      if (is.factor(get(dep_var, envir= as.environment(df)))) {
+        level <- levels(get(dep_var, envir= as.environment(df)))[2]
+      } else {
+        conv <- get(paste("as", typeof(get(dep_var, envir= as.environment(df))), sep= "."))
+        level <- names(table(get(dep_var, envir= as.environment(df))))[2]
+        level <- conv(level)
+      }
     }
-  } 
-  
-  # 01. create training / test partitions
-  set.seed(seed)
-  test_ind <- createDataPartition(y= get(dep_var, envir= as.environment(df)),
-                                  p= test_pct, times= 1,
-                                  list= TRUE)
+    # 01. create training / test partitions
+    set.seed(seed)
+    test_ind <- createDataPartition(y= get(dep_var, envir= as.environment(df)),
+                                    p= test_pct, times= 1,
+                                    list= TRUE)
+  } else {
+    set.seed(seed)
+    test_ind <- list(sample(1:nrow(df), size= floor(nrow(df) * test_pct)))
+  }
   
   test_dat <- df[test_ind[[1]],]
   train_temp <- df[-test_ind[[1]],]
-  
   train_dat <- vector("list", length= n)
-  p_ind <- which(get(dep_var, envir= as.environment(train_temp)) == level)
-  for (i in 1:n) {
-    n_ind <- which(get(dep_var, envir= as.environment(train_temp)) != level)
-    n_ind <- sample(n_ind, size= floor(length(p_ind) * major_class_wt), replace= TRUE)
-    train_dat[[i]] <- train_temp[c(p_ind, n_ind),]
+  
+  if (!gaussian) {
+    p_ind <- which(get(dep_var, envir= as.environment(train_temp)) == level)
+    for (i in 1:n) {
+      n_ind <- which(get(dep_var, envir= as.environment(train_temp)) != level)
+      n_ind <- sample(n_ind, size= floor(length(p_ind) * major_class_wt), replace= TRUE)
+      train_dat[[i]] <- train_temp[c(p_ind, n_ind),]
+    }
+  } else {
+    for (i in 1:n) {
+      train_dat[[i]] <- train_temp[sample(1:nrow(train_temp),
+                            size= floor((major_class_wt +1) * nrow(train_temp) * test_pct),
+                            replace=TRUE),]
+    }
   }
   
   return(list(test=test_dat, train=train_dat))

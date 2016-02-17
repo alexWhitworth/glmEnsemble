@@ -29,7 +29,7 @@ test_that("error checking", {
   expect_error(create_partitions(dtf, "y", n= 10, major_class_wt = 1, test_pct = -0.5))
 })
 
-test_that("partitioning works", {
+test_that("partitioning works, binomial", {
   # setup
   data(hprice, package= "faraway")
   hprice$high_price <- factor(ifelse(hprice$narsp > quantile(hprice$narsp, .8), 1, 0))
@@ -41,11 +41,31 @@ test_that("partitioning works", {
   expect_equal(length(p1), 2)
   expect_true(is.data.frame(p1[[1]]))
   expect_true(is.list(p1[[2]]))
-  expect_equal(length(p1[[2]], 10L))
+  expect_equal(length(p1[[2]]), 10L)
   expect_true(all(unlist(lapply(p1[[2]], class)) == "data.frame"))
   
   expect_true(all(unlist(lapply(p1[[2]], nrow)) <
                   unlist(lapply(p2[[2]], nrow))))
+  expect_true(all(unlist(lapply(p1[[2]], ncol)) ==
+                    unlist(lapply(p2[[2]], ncol))))
+  
+})
+
+test_that("partitioning works, gaussian", {
+  # setup
+  data(prostate, package= "faraway")
+  p1 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, gaussian = TRUE)
+  p2 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, major_class_wt = 2, gaussian = TRUE)
+  
+  expect_true(is.list(p1))
+  expect_equal(length(p1), 2)
+  expect_true(is.data.frame(p1[[1]]))
+  expect_true(is.list(p1[[2]]))
+  expect_equal(length(p1[[2]]), 10L)
+  expect_true(all(unlist(lapply(p1[[2]], class)) == "data.frame"))
+  
+  expect_true(all(unlist(lapply(p1[[2]], nrow)) <
+                    unlist(lapply(p2[[2]], nrow))))
   expect_true(all(unlist(lapply(p1[[2]], ncol)) ==
                     unlist(lapply(p2[[2]], ncol))))
   

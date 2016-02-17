@@ -1,9 +1,12 @@
 glmEnsemble: Ensemble methods for Generalized Linear Models
 ====
 
-Package for fitting GLM ensemble models. Currently still writing tests. only binomial-logit models have been used so far.
+This package trains and tests GLM ensemble models with backward variable  selection via AIC. Holdout testing data is first selected and then ensemble elements are trained on training datasets via resampling from the non-holdout data. The following family-link functions are supported: binomial-logit, binomial-probit, poisson-log, gaussian-identity. Resulting ensemble coefficients are weighted by accuracy on test data. By default, ensemble elements are built in parallel.
+
+**Note:** A future version of this package will include penalized GLMs via the penalized package.
 
 ## Release notes:
+- v0.2 - [NOT COMPLETE YET] Unit tests passed for supported GLM types (logit, probit, poisson-log, gaussian-identity)
 - v0.1.2 - first push to github. Still in process of writing tests.
 
 ## Installation
