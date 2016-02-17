@@ -1,0 +1,16 @@
+Package: glmEnsemble
+Title: Builds GLM ensemble models in parallel
+Version: 0.1.2
+Authors@R: person("Alex", "Whitworth", email = "whitworth.alex@gmail.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+Depends:
+    R (>= 3.2.3),
+    MASS
+Imports:
+    parallel (>= 3.2.3),
+    caret (>= 6.0)
+License: GPL-3
+LazyData: true
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
