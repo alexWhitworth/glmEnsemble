@@ -6,7 +6,7 @@ This package trains and tests GLM ensemble models with backward variable  select
 **Note:** A future version of this package will include penalized GLMs via the penalized package.
 
 ## Release notes:
-- v0.2 - [NOT COMPLETE YET] Unit tests passed for supported GLM types (logit, probit, poisson-log, gaussian-identity)
+- v0.2 - Unit tests passed for supported GLM types (logit, probit, poisson-log, gaussian-identity)
 - v0.1.2 - first push to github. Still in process of writing tests.
 
 ## Installation
