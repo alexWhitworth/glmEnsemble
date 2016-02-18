@@ -64,7 +64,7 @@ test_that("poisson log returns appropriately", {
   # setup
   data(gala, package= "faraway")
   names(gala)[1] <- "dep_var"
-  p1 <- create_partitions(gala, dep_var= "dep_var", n= 10L)
+  p1 <- create_partitions(gala, dep_var= "dep_var", n= 10L, binomial = FALSE)
   
   glm_def <- glm(dep_var ~ ., data= gala, family= poisson(link= "log"))
   coef_nm <- colnames(model.matrix(glm_def))
@@ -92,7 +92,7 @@ test_that("gaussian identity returns appropriately", {
   # setup
   data(prostate, package= "faraway")
   names(prostate)[1] <- "dep_var"
-  p1 <- create_partitions(prostate, dep_var= "dep_var", n= 10L, gaussian= TRUE)
+  p1 <- create_partitions(prostate, dep_var= "dep_var", n= 10L, binomial = FALSE)
   
   glm_def <- glm(dep_var ~ ., data= prostate, family= gaussian(link= "identity"))
   coef_nm <- colnames(model.matrix(glm_def))

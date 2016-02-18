@@ -71,6 +71,7 @@ tt_glm_par <- function(train_list, test_dat, out_vec, direction,
 #' @param df A \code{data.frame} for analysis
 #' @param dep_var A character string denoting the dependent variable in \code{df}.
 #' @param cols A vector of column indices corresponding the the variables you wish to regress on.
+#' This allows for variable (de)selection prior to model building. Defaults to using all columns.
 #' @param n An integer denoting the number of ensembles to build; defaults to \code{100L}.
 #' @param level level of interest. If \code{NULL} takes the 2nd level of a factor variable
 #' or the 2nd unique value from a non-factor variable.
@@ -97,6 +98,8 @@ glm_ensemble <- function(df, dep_var, cols= which(names(df) != dep_var), n= 100L
   if (test_pct <= 0 | test_pct >= 1) stop("test_pct must be in (0,1).")
   if (!is.numeric(cols) | length(cols) >= ncol(df)) 
     stop("cols must be a numeric vector with length < ncol(df).")
+  if (any(cols) < 1 | any(cols) > ncol(df)) 
+    stop("cols must be numeric indices in [1, ncol(df)].")
   
   if (is.null(leave_cores)) {leave_cores <- 1}
   
@@ -107,7 +110,7 @@ glm_ensemble <- function(df, dep_var, cols= which(names(df) != dep_var), n= 100L
   dat <- create_partitions(df= df, dep_var= "dep_var", n=n, 
                            level= level, major_class_wt = major_class_wt,
                            seed= seed, test_pct= test_pct,
-                           gaussian= ifelse(family$family == "gaussian", TRUE, FALSE))
+                           binomial= ifelse(family$family == "binomial", TRUE, FALSE))
   
   # build coef backbone
   glm_def <- glm(dep_var ~ ., data= dat$train[[1]], family= family)

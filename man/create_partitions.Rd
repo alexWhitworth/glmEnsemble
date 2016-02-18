@@ -5,7 +5,7 @@
 \title{Create data partitions}
 \usage{
 create_partitions(df, dep_var, level = NULL, n = 100L, major_class_wt = 1,
-  seed = 379L, test_pct = 0.33, gaussian = FALSE)
+  seed = 379L, test_pct = 0.33, binomial = TRUE)
 }
 \arguments{
 \item{df}{A \code{data.frame} for analysis}
@@ -27,8 +27,8 @@ Must be greater than or equal to 1.}
 \item{test_pct}{A number in (0,1) specifying the size of the test dataset as a percentage.
 Defaults to \code{0.33}}
 
-\item{gaussian}{Logical. Does the response variable follow a Gaussian distribution? Defaults 
-to \code{FALSE}.}
+\item{binomial}{Logical. Does the response variable follow a Binomial distribution? Defaults 
+to \code{TRUE}.}
 }
 \description{
 Create n data partitions for training with equal sized classes via resampling.

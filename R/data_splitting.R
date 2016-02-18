@@ -14,11 +14,11 @@
 #' @param seed An integer. Seed for reproducibility. Defaults to \code{379L}.
 #' @param test_pct A number in (0,1) specifying the size of the test dataset as a percentage.
 #' Defaults to \code{0.33}
-#' @param gaussian Logical. Does the response variable follow a Gaussian distribution? Defaults 
-#' to \code{FALSE}.
+#' @param binomial Logical. Does the response variable follow a Binomial distribution? Defaults 
+#' to \code{TRUE}.
 #' @export
 create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt= 1,
-                              seed= 379L, test_pct= 0.33, gaussian= FALSE) {
+                              seed= 379L, test_pct= 0.33, binomial= TRUE) {
   # error checking
   if (!is.data.frame(df)) stop("df must be a data.frame. Coercion is intentionally not supported.")
   if (!is.character(dep_var)) stop("dep_var must be a character.")
@@ -27,7 +27,7 @@ create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt=
   if (!is.numeric(test_pct) | test_pct <= 0 | test_pct >= 1) 
     stop("test_pct must be a number in (0,1).")
   
-  if (!gaussian) {
+  if (binomial) {
     if (missing(level) | is.null(level)) {
       if (is.factor(get(dep_var, envir= as.environment(df)))) {
         level <- levels(get(dep_var, envir= as.environment(df)))[2]
@@ -51,7 +51,7 @@ create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt=
   train_temp <- df[-test_ind[[1]],]
   train_dat <- vector("list", length= n)
   
-  if (!gaussian) {
+  if (binomial) {
     p_ind <- which(get(dep_var, envir= as.environment(train_temp)) == level)
     for (i in 1:n) {
       n_ind <- which(get(dep_var, envir= as.environment(train_temp)) != level)

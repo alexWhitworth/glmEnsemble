@@ -6,6 +6,7 @@
 #' to predict. 
 #' @param type the type of prediction required. The default, "link", is on the scale of the 
 #' linear predictors; the alternative "response" is on the scale of the response variable. 
+#' @export
 predict.glmEnsemble <- function(object, newdata= NULL, 
                                 type= c("link", "response")) {
   
@@ -14,7 +15,7 @@ predict.glmEnsemble <- function(object, newdata= NULL,
   if (missing(newdata)) {
     stop("newdata must be supplied.")
   } else {
-    mm <- model.matrix(~ ., newdata[, object$cols])
+    mm <- model.matrix(~ ., newdata[, object[[2]]$cols])
     beta <- object[[1]]
     if (ncol(mm) > length(beta)) stop("non-conformable arguments. New levels detected.")
     if (ncol(mm) < length(beta)) {
@@ -27,13 +28,17 @@ predict.glmEnsemble <- function(object, newdata= NULL,
   if (type == "link") {
     return(lp)
   } else {
-    if (family$family == "binomial" & family$link == "logit") {
-      pred <- exp(lp) / (1 + exp(lp))
-    } else if (family$family == "binomial" & family$link == "probit") {
+    if (object[[2]]$family$family == "binomial" & 
+        object[[2]]$family$link == "logit") {
+      pred <- ifelse(lp > 100, 1, exp(lp) / (1 + exp(lp)))
+    } else if (object[[2]]$family$family == "binomial" & 
+               object[[2]]$family$link == "probit") {
       pred <- pnorm(lp)
-    } else if (family$family == "poisson" & family$link == "log") {
+    } else if (object[[2]]$family$family == "poisson" & 
+               object[[2]]$family$link == "log") {
       pred <- round(exp(lp),0)
-    } else if (family$family == "gaussian" & family$link == "identity") {
+    } else if (object[[2]]$family$family == "gaussian" & 
+               object[[2]]$family$link == "identity") {
       pred <- lp
     }
     

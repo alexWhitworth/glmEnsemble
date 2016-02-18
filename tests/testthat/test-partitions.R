@@ -51,11 +51,11 @@ test_that("partitioning works, binomial", {
   
 })
 
-test_that("partitioning works, gaussian", {
+test_that("partitioning works, non-binomial", {
   # setup
   data(prostate, package= "faraway")
-  p1 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, gaussian = TRUE)
-  p2 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, major_class_wt = 2, gaussian = TRUE)
+  p1 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, binomial = FALSE)
+  p2 <- create_partitions(prostate, dep_var= "lcavol", n= 10L, major_class_wt = 2, binomial = FALSE)
   
   expect_true(is.list(p1))
   expect_equal(length(p1), 2)

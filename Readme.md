@@ -19,14 +19,25 @@ install_github("alexwhitworth/glmEnsemble",dependencies=TRUE)
 ## Example uses:
 
 ```
+# **** Binomial data (logit link) ****
 # load an example dataset, create a binary flag
-data(prostate, package= "faraway")
-prostate$high_cavol <- factor(ifelse(prostate$lcavol > quantile(prostate$lcavol, .8), 1, 0))
+data(hprice, package= "faraway"); hprice$msa <- NULL
+hprice$high_price <- factor(ifelse(hprice$narsp > quantile(hprice$narsp, .8), 1, 0))
 
 # model fitting in one-step
-# many defaults are explicitly specified here, the same call could be shortened to
-# glm1 <- glm_ensemble(prostate, "high_cavol")
-glm1 <- glm_ensemble(prostate, dep_var= "high_cavol", n= 100L, major_class_wt= 1,
-          test_pct= 0.33, direction= "backward", family= binomial(link= "logit"))
+# ** many defaults are used here, please see the documentation for more expressive use
+glm1 <- glm_ensemble(hprice, dep_var= "high_price", n= 10L, family= binomial(link= "logit"))
 
+# **** Poisson data ****
+data(gala, package= "faraway")
+glm2 <- glm_ensemble(gala, dep_var= "Species", n= 10L, family= poisson(link= "log"))
+
+# **** Gaussian data ****
+data(prostate, package= "faraway")
+glm3 <- glm_ensemble(prostate, dep_var= "lcavol", n= 10L, family= gaussian(link= "identity"))
+
+# **** predictions (type= response) ****
+pred1 <- predict(glm1, hprice, type= "response")
+pred2 <- predict(glm2, gala, type= "response")
+pred3 <- predict(glm3, prostate, type= "response")
 ```

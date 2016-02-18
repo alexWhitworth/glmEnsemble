@@ -4,7 +4,7 @@ library(testthat)
 
 context("regression accuracy metrics work") 
 
-test_that("can produce length errors" {
+test_that("can produce length errors", {
   expect_error(rmse(rnorm(10), rnorm(9)))
   expect_error(rmse(rnorm(9), rnorm(10)))
   expect_error(mnAD(rnorm(10), rnorm(9)))
@@ -38,7 +38,7 @@ test_that("get correct accuracy metrics", {
 
 context("class accuracy metrics work") 
 
-test_that("two class accuracy: errors, return-type, and bounds" {
+test_that("two class accuracy: errors, return-type, and bounds", {
   set.seed(1234L)
   p_vec <- runif(100)
   p_vec2 <- runif(75)
@@ -51,15 +51,15 @@ test_that("two class accuracy: errors, return-type, and bounds" {
   expect_error(class_logloss(p_vec, c_vec, w_vec2))
   
   # return type
-  epect_equal(length(class_logloss(p_vec, c_vec)), 1)
+  expect_equal(length(class_logloss(p_vec, c_vec)), 1)
   expect_true(is.numeric(class_logloss(p_vec, c_vec)))
   
   # bounds
-  exepct_lt(class_logloss(p_vec, c_vec), 0)
-  exepct_lt(class_logloss(p_vec, c_vec, w_vec), 0)
+  expect_lt(class_logloss(p_vec, c_vec), 0)
+  expect_lt(class_logloss(p_vec, c_vec, w_vec), 0)
   
-  exepct_gt(class_logloss(p_vec, c_vec), -Inf)
-  exepct_gt(class_logloss(p_vec, c_vec, w_vec), -Inf)
+  expect_gt(class_logloss(p_vec, c_vec), -Inf)
+  expect_gt(class_logloss(p_vec, c_vec, w_vec), -Inf)
   
 })
 
@@ -78,7 +78,7 @@ test_that("multiclass accuracy: errors, return-type, and bounds", {
   
   # return type
   expect_equal(length(multiclass_logloss(p_mat, c_mat)), 1)
-  expect_equal(is.numeric(multiclass_logloss(p_mat, c_mat)))
+  expect_true(is.numeric(multiclass_logloss(p_mat, c_mat)))
   
   # bounds
   expect_lt(multiclass_logloss(p_mat, c_mat), 0)
