@@ -11,6 +11,7 @@
 #' partition as a multiple of the number of minority class observations. Defaults to \code{1}, 
 #' which will produce equal sized sets of minority and non-minority class in each partition.
 #' Must be greater than or equal to 1.
+#' Poisson and Gaussian distributions use bagging on the non-test dataset.
 #' @param seed An integer. Seed for reproducibility. Defaults to \code{379L}.
 #' @param test_pct A number in (0,1) specifying the size of the test dataset as a percentage.
 #' Defaults to \code{0.33}
@@ -61,8 +62,7 @@ create_partitions <- function(df, dep_var, level= NULL, n= 100L, major_class_wt=
   } else {
     for (i in 1:n) {
       train_dat[[i]] <- train_temp[sample(1:nrow(train_temp),
-                            size= floor((major_class_wt +1) * nrow(train_temp) * test_pct),
-                            replace=TRUE),]
+                            size= nrow(train_temp), replace=TRUE),]
     }
   }
   
