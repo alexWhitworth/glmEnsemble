@@ -1,6 +1,6 @@
 Package: glmEnsemble
 Title: Builds GLM ensemble models in parallel
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: person("Alex", "Whitworth", email = "whitworth.alex@gmail.com", role = c("aut", "cre"))
 Description: This package trains and tests GLM ensemble models with backward variable  selection via AIC. Holdout testing data is first selected and then ensemble elements are trained on training datasets via bootstrap resampling from the non-holdout data. The following family-link functions are supported: binomial-logit, binomial-probit, poisson-log, gaussian-identity. Binomial resample size is controled by the user, while poisson and gaussian data use bagging. Resulting ensemble coefficients are weighted by accuracy on test data. By default, ensemble elements are built in parallel.
 Depends:
