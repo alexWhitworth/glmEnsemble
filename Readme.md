@@ -1,6 +1,10 @@
 glmEnsemble: Ensemble methods for Generalized Linear Models
 ====
 
+[![Build Status](https://travis-ci.org/alexWhitworth/glmEnsemble.svg?branch=master)](https://travis-ci.org/alexWhitworth/glmEnsemble.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/alexWhitworth/glmEnsemble/badge.svg?branch=master)](https://coveralls.io/github/alexWhitworth/glmEnsemble?branch=master)
+
+
 This package trains and tests GLM ensemble models with backward variable  selection via AIC. Holdout testing data is first selected and then ensemble elements are trained on training datasets via bootstrap resampling from the non-holdout data. The following family-link functions are supported: binomial-logit, binomial-probit, poisson-log, gaussian-identity. Resulting ensemble coefficients are weighted by accuracy on test data. By default, ensemble elements are built in parallel.
 
 Ensemble models are expected to work because different models (ensemble elements) will not make the same error. Consider the set of *k* models where each model makes iid errors $\epsilon_i \sim MVN(0, \sigma^2), i=1, \ldots, n$ on each observation. Then the average prediction error of the ensemble is $\frac{1}{k}\sum_i \epsilon_i$.
