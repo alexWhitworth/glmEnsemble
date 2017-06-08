@@ -102,16 +102,16 @@ multiclass_logloss <- function(p_mat, class_mat, w_vec= NULL) {
 #' rate (fdr), and true negative rate (tnr) associated with each threshold value.
 #' @export
 calc_roc <- function(pred_vec, labels, thresholds= seq(0.01,1,.01)) {
-  library(plyr)
   len <- length(thresholds)
-  acc <- tnr <- tpr <- fdr <- vector("numeric", length= len)
+  acc <- tnr <- tpr <- fdr <- fnr <- vector("numeric", length= len)
   for (i in 1:len) {
     t <- table(labels, pred_vec > thresholds[i])
     if (any(pred_vec > thresholds[i]) & any(pred_vec <= thresholds[i])) {
       t <- t[c("FALSE", "TRUE"), c("FALSE", "TRUE")]  
-      tpr[i] <- try_default(t["TRUE","TRUE"] / sum(t[,"TRUE"]), as.double(0), quiet= TRUE)
-      fdr[i] <- try_default(t["FALSE","TRUE"] / sum(t["FALSE",]), as.double(0), quiet= TRUE)
-      tnr[i] <- try_default(t["FALSE","FALSE"] / sum(t[,"FALSE"]), as.double(0), quiet= TRUE)
+      tpr[i] <- plyr::try_default(t["TRUE","TRUE"] / sum(t["TRUE",]), as.double(0), quiet= TRUE)
+      fdr[i] <- plyr::try_default(t["FALSE","TRUE"] / sum(t["FALSE",]), as.double(0), quiet= TRUE)
+      tnr[i] <- plyr::try_default(t["FALSE","FALSE"] / sum(t[,"FALSE"]), as.double(0), quiet= TRUE)
+      fnr[i] <- plyr::try_default(t["TRUE","FALSE"] / sum(t[,"TRUE"]), as.double(0), quiet= TRUE)
       acc[i] <- sum(diag(t)) / sum(t)
     }
     else if (sum(pred_vec > thresholds[i]) == 0) {
@@ -122,7 +122,7 @@ calc_roc <- function(pred_vec, labels, thresholds= seq(0.01,1,.01)) {
       acc[i] <- sum(labels == TRUE) / length(labels)
     }
   }
-  out <- cbind(fdr= fdr, tpr= tpr, tnr= tnr, acc)
+  out <- cbind(tpr= tpr, tnr= tnr, fdr= fdr, fnr= fnr, acc= acc)
   rownames(out) <- thresholds
   return(out)
 }
